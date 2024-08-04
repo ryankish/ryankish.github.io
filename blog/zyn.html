@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Making money off Zyn to fund my Zyn addiction with a breadth-first-search algorithm.</title>
+    <title>Making money off Zyn to fund my Zyn addiction with a breadth-first search algorithm.</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NLVNH4F2ZV"></script>
@@ -16,7 +16,7 @@
     </script>
 <body>
     <div class="main-content">
-        <h1>Making money off Zyn to fund my Zyn addiction with a breadth-first-search algorithm.</h1>
+        <h1>Making money off Zyn to fund my Zyn addiction with a breadth-first search algorithm.</h1>
         <img src="../assets/zyn/zyn_bfs.png" alt="Zyn BFS" class="blog-post-main-image">
         <p class="center"><a href="https://github.com/ryankish/bfs-store-scrape">See my code</a></p>
 
@@ -37,7 +37,7 @@
 
         <p>So I had a thesis that Swedish Match was a strong company that would benefit from shifting consumer preferences and regulatory perspectives, driven by the growth of Zyn in the United States. But I really wanted a quantitative KPI to confirm my beliefs.</p>
 
-        <h2>Breadth-First-Search Webscrape</h2>
+        <h2>Breadth-First Search Webscrape</h2>
 
         <p>While there were many factors that gave me confidence in the investment, the cornerstone of my analysis was my web-scraping tool.</p>
 
@@ -51,7 +51,7 @@
 
         <p>The endpoint returned the 50 closest stores (including store name, address, latitude, and longitude) for a given input coordinate.</p>
 
-        <p>With a file mapping zip codes to their center coordinates, my algorithm went state-by-state. At first, I tried querying the coordinates of every zip code but found that many queries were redundant. I devised a breadth-first-search strategy to minimize the number of requests as I was worried about rate limiting.</p>
+        <p>With a file mapping zip codes to their center coordinates, my algorithm went state-by-state. At first, I tried querying the coordinates of every zip code but found that many queries were redundant. I devised a breadth-first search strategy to minimize the number of requests as I was worried about rate limiting.</p>
 
         <p>I tried building a convex hull around all the coordinates I had seen, but this approach didn’t work. Imagine if stores were arranged in a “C” shape and there was a store in the middle of the “C”. If my graph of queried locations drew a convex hull around the “C” arc, it would mislabel the middle of the “C” as searched. So my adaptation was to create a convex hull around each set of the 50 returned stores, which would be complete and accurate. I then merged that convex hull with a persistent graph for which the interior contained areas that had already been queried.</p>
 

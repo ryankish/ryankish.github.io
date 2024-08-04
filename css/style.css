@@ -22,9 +22,11 @@ body {
 h1 {
     font-size: 2em;
     margin-bottom: 0.5em;
-    text-align: center;
 }
 
+h1.center {
+    text-align: center;
+}
 
 p {
     font-size: 1.2em;
@@ -54,9 +56,15 @@ ul {
     list-style-type: circle;
     padding-left: 20px;
     text-align: left;
+    
+}
+
+ol {
+    font-size: 1.2em;
 }
 
 .blog-posts {
+    font-size: 1.2em;
     list-style-type: circle;
     padding-left: 20px;
     text-align: left;
