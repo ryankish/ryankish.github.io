@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Do Embeddings Converge? Part I</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NLVNH4F2ZV"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-NLVNH4F2ZV');
+</script>
+
+<body>
+    <div class="main-content">
+
+            <h1>The Butterfly Effect: How Random Initialization Shapes WTE Semantic Similarity</h1>       
+     
+        <div class="ascii-art-container">
+  <pre class="ascii-art">
+
+.==-.                   .-==.
+ \()8`-._  `.   .'  _.-'8()/
+ (88"   ::.  \./  .::   "88)
+  \_.'`-::::.(#).::::-'`._/
+    `._... .q(_)p. ..._.'
+      ""-..-'|=|`-..-""
+      .""' .'|=|`. `"".
+    ,':8(o)./|=|\.(o)8:`.
+   (O :8 ::/ \_/ \:: 8: O)
+    \O `::/       \::' O/
+     ""--'         `--""
+        </pre>
+            </div>
+ 
+        <p>Here, I aim to measure the impact of random weight initialization on the semantics of word token
+            embeddings. I run two experiments:</p>
+        <ol>
+            <li>If I randomly initialize two language models, how will their embeddings differ after identical training?
+            </li>
+            <li>If I take a two copies of a pre-trained language model, reinitialize the embeddings, and lock all weights except for the
+                embeddings, how do the embeddings differ after subsequent identical training?</li>
+        </ol>
+               <p>We know that the training process of machine learning models is highly stochastic and dependent on
+            non-differentiable factors. For example, models are sensitive to small changes in hyperparameters. For
+            language models, the choices made regarding tokenization can be very important (see one of my favorite ML
+            posts on <a
+                href="https://www.lesswrong.com/posts/sDn5MnBGdvKMenHRr/nokens-a-potential-method-of-investigating-glitch-tokens">"glitch"
+                    tokens</a>). Innovations like layer normalization
+            have enhanced the robustness of models to weight initialization techniques, improving training stability and performance. However, regardless of the initialization technique or use of layer norm, different random weight initializations will yield different models. I am curious about how semantically different the embeddings can become due to random weight initialization.</p>
+
+        <p>I’m not sure if there are any papers to this effect, but it is easy enough to experiment yourself!</p>
+       
+        <h2>Methods</h2>
+        <p>The experiment uses a decoder-only transformer model. While bidirectional models may produce higher-quality
+            embeddings, I am more interested in GPT/decoder-style models which are more popular. I use an embedding dimension of 512 and the GPT-2 tokenizer.</p>
+        <p>The training objective is the standard next-token prediction pre-training task. I use the WikiText-2 corpus as
+            the dataset.</p>
+
+        <h2>Similarity</h2>
+        <p>What constitutes similarity between two sets of word token embeddings is not clearly defined. I am
+            concerned about the semantic similarity between embedding spaces, so ideally, we would interchange the embeddings and compare their performance on downstream tasks. Without such a dataset, I settle for an interpretable measure that doesn't require external tasks but still attempts to capture the semantic differences between the embedding spaces.</p>
+        <p>This approach involves, for token \( i \), finding the tokens that are most similar to it in its embedding space and determining if those tokens are also among the most similar tokens to token \( i \) in the other embedding space.</p>
+        <p>The metric I use is K-nearest neighbors Jaccard coefficient. To compute the token-wise similarity, first
+            find the K closest tokens to a token's vector in each embedding space. The metric I use for
+            within-embedding space closeness is the inner-product since it captures both directionality and magnitude. Then, the
+            overlap (intersection over union) between the sets of similar tokens can be computed, which tells us the
+            token-wise similarity between the embedding spaces. <a href="https://arxiv.org/abs/2007.16006">This</a>
+            paper led me to determine that this was an effective metric.</p>
+
+        <p>The token-wise "KNN Match Similarity," as I call it, is given by:</p>
+        <p>$$\text{Similarity}(t_i^{(1)}, t_i^{(2)}) = \frac{| \mathcal{N}_K(t_i^{(1)}) \cap \mathcal{N}_K(t_i^{(2)})
+            |}{| \mathcal{N}_K(t_i^{(1)}) \cup \mathcal{N}_K(t_i^{(2)}) |}$$</p>
+
+        <p>Where \( t_i^{(1)} \) represents token \( i \) in embedding space 1, and \( t_i^{(2)} \) represents the same
+            token in embedding space 2. The sets \( \mathcal{N}_K(t_i^{(1)}) \) and \( \mathcal{N}_K(t_i^{(2)}) \)
+            denote the \( K \) nearest neighbors of \( t_i^{(1)} \) and \( t_i^{(2)} \) in their respective embedding
+            spaces.</p>
+        <p>A KNN Match Similarity of 1.0 means that all the nearest neighbors of the token are the same in both embedding spaces.</p>
+
+        <p>A nice feature of this metric, though not pertinent to this experiment is that it doesn't require the
+            dimensions of the two embedding spaces to be the same. Unfortunately, this metric suffers from an arbitrary
+            choice--what \( K \) to use? I find 10 to be reasonable. Additionally, when aggregating the token-wise similarities, one might not want to include all
+            tokens in the calculation. But I forgo this so as not to introduce any bias in my
+            metric (for example, a high density of polysemous tokens would increase uncertainty). A better approach might exclude punctuation, use a word-level tokenizer instead of BPE, and weight the KNN Match Similarities by token frequency in the training text, as more frequent tokens would likely have more robust representations.</p>
+
+
+        <h2>Experiment Results</h2>
+
+        <h3>Experiment 1: Training Entire Models From Scratch</h2>
+            <p>In the first experiment, I aim to investigate how random weight initialization affects the semantic similarity of the word token embeddings when the models are trained from scratch. I initialize two transformers with the same architecture using Xavier. I then train them both identically, including
+                the order of data. After 10,000 training steps, both the models achieve perplexities of ~45 on the test set, which is low enough to merit comparison of the embedding spaces.</p>
+            <img src="../assets/wte_init/experiment_1/knn_sim_line_inner_product.gif" alt="Experiment 1 Perplexity Curve" class="wte-init-perp-image">
+            <h3>Experiment 2: Reinitialize Embeddings of Trained Model</h3>
+            <p>In the second experiment, I wanted to isolate all the learning to the embeddings. I made two copies of the first model from experiment 1, and reinitialized the embeddings of the two copies. All other parameters were frozen, and I trained the models for another 10,000 steps.</p>
+            <img src="../assets/wte_init/experiment_2/knn_sim_line_inner_product.gif" alt="Experiment 2 Perplexity Curve" class="wte-init-perp-image">
+
+            <h2>Analysis</h2>
+                <p>As expected, the KNN Match Similarity starts at ~0 at initialization in both experiments.</p>
+                <p>In experiment 1, when the models are trained from scratch and all parameters are updated, the KNN Match Similarity between the embeddings increases to about 13%, and then the embeddings start diverging. I interpret this as an initial convergence as the models learn the fundamental token relationships, and a divergence as the precise purposes of embeddings begin to differ, which is due to the different initializations of the embeddings as well as the rest of the model.</p>
+                <p>In experiment 2, when only the embedding weights are updated, the KNN Match Similarity monotonically increased throughout training. However, the similarity starts to plateau, and ultimately reaches ~35%. This suggests that with fixed processes, the embeddings have a more specific role to play in the model. The embeddings get molded around the existing semantic framework established by the training in experiment 1.</p>
+                <!--<p>I would say that 35% similarity is a pretty high similarity to observe. 35% appears to approach the maximum similarity for experiment 2, so I wouldn't try training more steps on WikiText-2, but would be curious how these results look on a larger and more diverse corpora. Also, just updating the embeddings, the experiment 2 models are over-fitting the training data.</p>-->
+            <h2>Interpretation</h2>
+                <p>Experiment 1 appears to demonstrate that the precise role that embeddings play in the model can be different. Even under identical training conditions and with the same loss, the embeddings can be quite different. On average, for a given token, only 1 out of 10 of the closest tokens in embedding spaces would match. Experiment 2 shows that by fixing all other parameters of the model, the precise role of the embeddings is more honed, and leads to high similarity as training increases. However, it does not appears that more training would lead to near-perfect similarity, as the similarity plateaus around 35%.</a>
+                <p>Further analysis could be done on a larger corpus, different initialization strategies, and with other measures of similarity (e.g., downstream tasks).</p>
+        
+        <!--<p class="center"><a href="x">See my code</a></p>-->
+        <!--<h2>Appendix</h2>-->
+        <!--<h3>Experiment 1 Perplexity Curve</h3>-->
+        <!--<img src="../assets/wte_init/experiment_1/exp_1_perplexity_graphs.png" alt="Experiment 1 Perplexity Curve" class="wte-init-perp-image">-->
+        <!--<h3>Experiment 2 Perplexity Curve</h3>-->
+        <!--<p>Steps indicate the training steps post-reinitialization of the embeddings.</p>-->
+        <!--<img src="../assets/wte_init/experiment_2/exp_2_perplexity_graphs.png" alt="Experiment 2 Perplexity Curve" class="wte-init-perp-image">-->
+    </div>
+</body>
+
+</html>
+
