@@ -94,6 +94,25 @@ ol {
     font-size: 1em;
 }
 
+.homepage-art {
+    margin: 2em 0 2.25em;
+}
+
+.homepage-art img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+}
+
+.homepage-art figcaption {
+    margin-top: 0.65em;
+    color: #555;
+    font-size: 0.95em;
+    line-height: 1.45;
+    text-align: center;
+}
+
 .blog-post-main-image {
     max-width: 100%;
     height: auto;
