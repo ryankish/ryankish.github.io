@@ -33,10 +33,22 @@
         </figure>
         
         <h2>Blog Posts</h2>
-        <ul class="blog-posts">
-            <li><a href="blog/wte_init.html"><b>The Butterfly Effect: How Random Initialization Shapes WTE Semantic Similarity</b></a> An experiment exploring how random weight initialization leads identical language models to develop divergent word token embeddings under identical training conditions.</li>
-            <li><a href="blog/zyn.html"><b>Profiting Off Zyn with BFS Webscrape</b></a> I developed a BFS algorithm to track the rapid growth of Zyn in the U.S., leading to a highly profitable investment in parent company Swedish Match.</li>
-        </ul>
+        <div class="blog-posts">
+            <a class="blog-card" href="blog/zyn.html">
+                <div class="blog-card-text">
+                    <h3>Profiting Off Zyn with BFS Webscrape</h3>
+                    <p>I developed a BFS algorithm to track the rapid growth of Zyn in the U.S., leading to a highly profitable investment in parent company Swedish Match.</p>
+                </div>
+                <img src="assets/zyn/zyn_bfs.png" alt="Map visualization of the Zyn BFS webscrape">
+            </a>
+            <a class="blog-card" href="blog/wte_init.html">
+                <div class="blog-card-text">
+                    <h3>The Butterfly Effect: How Random Initialization Shapes WTE Semantic Similarity</h3>
+                    <p>An experiment exploring how random weight initialization leads identical language models to develop divergent word token embeddings under identical training conditions.</p>
+                </div>
+                <img src="assets/wte_init/experiment_1/exp_1_perplexity_graphs.png" alt="Perplexity graphs from the WTE initialization experiment">
+            </a>
+        </div>
 
         <h2>Links</h2>
         <ul class="social-links">

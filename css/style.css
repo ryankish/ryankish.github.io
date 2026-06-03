@@ -69,14 +69,95 @@ ol {
 }
 
 .blog-posts {
-    font-size: 1.2em;
-    list-style-type: circle;
-    padding-left: 20px;
-    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    margin: 1em 0 1.5em;
 }
 
-.blog-posts li {
-    margin: 0.5em 0;
+.blog-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25em;
+    padding: 1em;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #83919d;
+    border-radius: 5px;
+    background: #fff;
+    box-shadow: 2px 2px 0 #7a8792;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.blog-card:visited {
+    color: inherit;
+}
+
+.blog-card:hover,
+.blog-card:focus {
+    text-decoration: none;
+    border-color: #0077b5;
+    box-shadow: 2px 2px 0 #0077b5;
+    transform: none;
+}
+
+.blog-card::before,
+.blog-card::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+}
+
+.blog-card::before {
+    top: -1px;
+    right: 24px;
+    width: 72px;
+    height: 1px;
+    background: #0077b5;
+    box-shadow:
+        -54px 0 0 #c2cbd2,
+        0 calc(100% + 1px) 0 #0077b5;
+}
+
+.blog-card::after {
+    right: -1px;
+    top: 26px;
+    width: 1px;
+    height: 46px;
+    background: #0077b5;
+    box-shadow:
+        0 60px 0 #c2cbd2,
+        calc(-100vw + 1px) 50px 0 transparent;
+}
+
+.blog-card-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.blog-card h3 {
+    margin: 0 0 0.35em;
+    color: #0077b5;
+    font-size: 1.25em;
+    line-height: 1.25;
+}
+
+.blog-card p {
+    margin: 0;
+    color: #333;
+    font-size: 1em;
+    line-height: 1.45;
+}
+
+.blog-card img {
+    flex: 0 0 185px;
+    width: 185px;
+    height: 120px;
+    object-fit: cover;
+    border: 1px solid #b8c2ca;
+    border-radius: 4px;
 }
 
 .social-links {
@@ -251,6 +332,26 @@ pre.ascii-art {
 
     p {
         font-size: 1em;
+    }
+
+    .blog-card {
+        align-items: stretch;
+        gap: 0.85em;
+        padding: 0.85em;
+    }
+
+    .blog-card h3 {
+        font-size: 1.05em;
+    }
+
+    .blog-card p {
+        font-size: 0.9em;
+    }
+
+    .blog-card img {
+        flex-basis: 105px;
+        width: 105px;
+        height: 92px;
     }
 
     .blog-post-main-image {
