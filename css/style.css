@@ -34,9 +34,14 @@ h1.center {
 }
 
 p {
+    font-size: 1.05em;
+    line-height: 1.5;
+    margin: 1em 0;
+}
+
+article p {
     font-size: 1.2em;
     line-height: 1.6;
-    margin: 1em 0;
 }
 
 p.center {
