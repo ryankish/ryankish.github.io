@@ -63,6 +63,40 @@ a:focus {
     text-decoration: underline;
 }
 
+.post-nav {
+    display: flex;
+    align-items: center;
+    margin: 0.35em 0 1.85em;
+}
+
+.home-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    color: #52606a;
+    font-size: 1em;
+    line-height: 1.2;
+    letter-spacing: 0;
+    transition: color 0.15s ease;
+}
+
+.home-link:visited {
+    color: #52606a;
+}
+
+.home-link:hover,
+.home-link:focus {
+    color: #0077b5;
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+}
+
+.home-link-arrow {
+    color: #0077b5;
+    font-size: 1.15em;
+    line-height: 1;
+}
+
 ul {
     list-style-type: circle;
     padding-left: 20px;
@@ -336,6 +370,14 @@ pre.ascii-art {
     }
 
     p {
+        font-size: 1em;
+    }
+
+    .post-nav {
+        margin: 0.25em 0 1.35em;
+    }
+
+    .home-link {
         font-size: 1em;
     }
 
