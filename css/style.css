@@ -264,7 +264,7 @@ code {
     font-size: 0.9em;
 }
 
-.random-init-perp-image {
+.random-init-figure {
     display: block;
     width: 90%;  /* Adjust this percentage to make the image smaller or larger */
     height: auto;

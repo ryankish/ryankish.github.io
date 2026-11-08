@@ -129,13 +129,13 @@
 
         <h2>Experiment Results</h2>
 
-        <h3>Experiment 1: Training Entire Models From Scratch</h2>
+        <h3>Experiment 1: Training Entire Models From Scratch</h3>
             <p>In the first experiment, I aim to investigate how random weight initialization affects the semantic similarity of the word token embeddings when the models are trained from scratch. I initialize two transformers with the same architecture using Xavier Glorot. I then train them both identically, including
                 the order of data. After 16,000 training steps, both the models achieve perplexities of ~48 on the test set, which is low enough to merit comparison of the embedding spaces.</p>
-            <img src="../assets/random-init-word-embeddings/experiment_1/knn_sim_line_inner_product.gif" alt="Experiment 1 Perplexity Curve" class="random-init-perp-image">
+            <img src="../assets/random-init-word-embeddings/experiment_1/knn_sim_line_inner_product.gif" alt="Experiment 1 Perplexity Curve" class="random-init-figure">
             <h3>Experiment 2: Reinitialize Embeddings of Trained Model</h3>
             <p>In the second experiment, I wanted to isolate all the learning to the embeddings. I made two copies of the first model from experiment 1, and reinitialized the embeddings of the two copies. All other parameters were frozen, and I trained the models for another 8,000 steps on reshuffled data.</p>
-            <img src="../assets/random-init-word-embeddings/experiment_2/knn_sim_line_inner_product.gif" alt="Experiment 2 Perplexity Curve" class="random-init-perp-image">
+            <img src="../assets/random-init-word-embeddings/experiment_2/knn_sim_line_inner_product.gif" alt="Experiment 2 Perplexity Curve" class="random-init-figure">
 
             <h2>Analysis</h2>
                 <p>In both experiments, the KNN Match Similarity is 0 at initialization, confirming that the initializations were different.</p>
@@ -149,10 +149,10 @@
         <p class="center"><a href="https://github.com/ryankish/wte-init-semantic-similarity">See my code</a></p>
         <h2>Appendix</h2>
         <h3>Experiment 1 Perplexity Curve</h3>
-        <img src="../assets/random-init-word-embeddings/experiment_1/exp_1_perplexity_graphs.png" alt="Experiment 1 Perplexity Curve" class="random-init-perp-image">
+        <img src="../assets/random-init-word-embeddings/experiment_1/exp_1_perplexity_graphs.png" alt="Experiment 1 Perplexity Curve" class="random-init-figure">
         <h3>Experiment 2 Perplexity Curve</h3>
         <p>Steps indicate the training steps post-reinitialization of the embeddings.</p>
-        <img src="../assets/random-init-word-embeddings/experiment_2/exp_2_perplexity_graphs.png" alt="Experiment 2 Perplexity Curve" class="random-init-perp-image">
+        <img src="../assets/random-init-word-embeddings/experiment_2/exp_2_perplexity_graphs.png" alt="Experiment 2 Perplexity Curve" class="random-init-figure">
     </article>
 </body>
 
